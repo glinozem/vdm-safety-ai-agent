@@ -1,6 +1,7 @@
 from app.schemas.documents import DocumentItem, DocumentStatus, DocumentType
 from app.services.ingest_models import (
     IngestCommand,
+    MetadataExtractionResult,
     ReplaceStrategy,
     SourceInspectionResult,
     SourceKind,
@@ -35,10 +36,23 @@ class FakeInspector:
         )
 
 
+class FakeMetadataExtractor:
+    def extract(
+        self,
+        inspection: SourceInspectionResult,
+    ) -> MetadataExtractionResult:
+        return MetadataExtractionResult(
+            source=inspection.source,
+            source_kind=inspection.source_kind,
+            file_name="fake-protocol-test.pdf",
+        )
+
+
 def test_ingest_service_uses_registry_protocol() -> None:
     registry = FakeRegistry()
     inspector = FakeInspector()
-    service = IngestService(registry, inspector)
+    metadata_extractor = FakeMetadataExtractor()
+    service = IngestService(registry, inspector, metadata_extractor)
 
     command = IngestCommand(
         source="fake-protocol-test.pdf",

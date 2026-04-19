@@ -4,6 +4,7 @@ from typing import Protocol
 
 from app.schemas.documents import DocumentItem
 from app.services.ingest_models import (
+    MetadataExtractionResult,
     ReplaceStrategy,
     SourceInspectionResult,
 )
@@ -28,3 +29,13 @@ class SourceInspectorProtocol(Protocol):
 
     def inspect(self, source: str) -> SourceInspectionResult:
         """Inspect a source string and return minimal source metadata."""
+
+
+class MetadataExtractorProtocol(Protocol):
+    """Minimal protocol required by ingest-related services."""
+
+    def extract(
+        self,
+        inspection: SourceInspectionResult,
+    ) -> MetadataExtractionResult:
+        """Extract minimal metadata from a source inspection result."""

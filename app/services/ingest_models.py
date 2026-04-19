@@ -36,6 +36,15 @@ class SourceInspectionResult:
 
 
 @dataclass(frozen=True)
+class MetadataExtractionResult:
+    """Application-level result of metadata extraction."""
+
+    source: str
+    source_kind: SourceKind
+    file_name: str
+
+
+@dataclass(frozen=True)
 class IngestResult:
     """Application-level result for ingest operations."""
 
