@@ -1,5 +1,3 @@
-from uuid import uuid4
-
 from fastapi import APIRouter, status
 
 from app.schemas.documents import (
@@ -8,6 +6,7 @@ from app.schemas.documents import (
     DocumentListResponse,
 )
 from app.services.document_registry import registry
+from app.services.ingest_service import ingest_service
 
 router = APIRouter()
 
@@ -23,12 +22,4 @@ def list_documents() -> DocumentListResponse:
     status_code=status.HTTP_202_ACCEPTED,
 )
 def ingest_document(payload: DocumentIngestRequest) -> DocumentIngestResponse:
-    document = registry.add_stub_document(
-        source=payload.source,
-        replace_strategy=payload.replace_strategy,
-    )
-    return DocumentIngestResponse(
-        job_id=str(uuid4()),
-        status="accepted",
-        document=document,
-    )
+    return ingest_service.ingest(payload)
