@@ -2,8 +2,8 @@
 
 from uuid import uuid4
 
-from app.schemas.documents import DocumentItem, DocumentStatus, DocumentType
-from app.services.ingest_models import ReplaceStrategy
+from app.schemas.documents import DocumentItem
+from app.services.ingest_models import DocumentDraft
 
 
 class InMemoryDocumentRegistry:
@@ -21,21 +21,20 @@ class InMemoryDocumentRegistry:
         """Clear registry state to keep tests isolated."""
         self._items.clear()
 
-    def add_stub_document(
-        self,
-        source: str,
-        replace_strategy: ReplaceStrategy,
-    ) -> DocumentItem:
-        """Register a stub document for the current ingest prototype."""
-        document = DocumentItem(
-            id=str(uuid4()),
-            code=f"stub-{len(self._items) + 1:03d}",
-            title=f"Ingested from {source}",
-            doc_type=DocumentType.STUB,
-            status=DocumentStatus.ACCEPTED,
-        )
+    def add_document(self, document: DocumentItem) -> DocumentItem:
+        """Store a prepared document item and return it."""
         self._items.append(document)
         return document
+
+    def build_document_item(self, draft: DocumentDraft) -> DocumentItem:
+        """Convert a draft into a stored document item."""
+        return DocumentItem(
+            id=str(uuid4()),
+            code=f"{draft.code}-{len(self._items) + 1:03d}",
+            title=draft.title,
+            doc_type=draft.doc_type,
+            status=draft.status,
+        )
 
 
 registry = InMemoryDocumentRegistry()

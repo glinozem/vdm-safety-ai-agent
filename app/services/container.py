@@ -1,5 +1,6 @@
 """Dependency container for service-layer objects."""
 
+from app.services.document_factory import DocumentFactory
 from app.services.document_query_service import DocumentQueryService
 from app.services.document_registry import registry
 from app.services.ingest_service import IngestService
@@ -15,11 +16,13 @@ class ServiceContainer:
         self.registry = registry
         self.source_inspector = SourceInspector()
         self.metadata_extractor = MetadataExtractor()
+        self.document_factory = DocumentFactory()
         self.document_query_service = DocumentQueryService(self.registry)
         self.ingest_service = IngestService(
             self.registry,
             self.source_inspector,
             self.metadata_extractor,
+            self.document_factory,
         )
 
 

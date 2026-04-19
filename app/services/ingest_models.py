@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 from enum import StrEnum
 
-from app.schemas.documents import DocumentItem, DocumentStatus
+from app.schemas.documents import DocumentItem, DocumentStatus, DocumentType
 
 
 class ReplaceStrategy(StrEnum):
@@ -42,6 +42,16 @@ class MetadataExtractionResult:
     source: str
     source_kind: SourceKind
     file_name: str
+
+
+@dataclass(frozen=True)
+class DocumentDraft:
+    """Application-level draft used before a document item is finalized."""
+
+    code: str
+    title: str
+    doc_type: DocumentType
+    status: DocumentStatus
 
 
 @dataclass(frozen=True)

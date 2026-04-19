@@ -1,5 +1,6 @@
 from app.schemas.documents import DocumentItem, DocumentStatus, DocumentType
 from app.services.ingest_models import (
+    DocumentDraft,
     IngestCommand,
     MetadataExtractionResult,
     ReplaceStrategy,
@@ -11,20 +12,19 @@ from app.services.ingest_service import IngestService
 
 class FakeRegistry:
     def __init__(self) -> None:
-        self.calls: list[tuple[str, ReplaceStrategy]] = []
+        self.calls: list[DocumentItem] = []
 
-    def add_stub_document(
-        self,
-        source: str,
-        replace_strategy: ReplaceStrategy,
-    ) -> DocumentItem:
-        self.calls.append((source, replace_strategy))
+    def add_document(self, document: DocumentItem) -> DocumentItem:
+        self.calls.append(document)
+        return document
+
+    def build_document_item(self, draft: DocumentDraft) -> DocumentItem:
         return DocumentItem(
             id="fake-id-1",
             code="stub-001",
-            title=f"Ingested from {source}",
-            doc_type=DocumentType.STUB,
-            status=DocumentStatus.ACCEPTED,
+            title=draft.title,
+            doc_type=draft.doc_type,
+            status=draft.status,
         )
 
 
@@ -48,11 +48,31 @@ class FakeMetadataExtractor:
         )
 
 
+class FakeDocumentFactory:
+    def create_stub_document_draft(
+        self,
+        metadata: MetadataExtractionResult,
+        replace_strategy: ReplaceStrategy,
+    ) -> DocumentDraft:
+        return DocumentDraft(
+            code="stub",
+            title=f"Ingested from {metadata.source}",
+            doc_type=DocumentType.STUB,
+            status=DocumentStatus.ACCEPTED,
+        )
+
+
 def test_ingest_service_uses_registry_protocol() -> None:
     registry = FakeRegistry()
     inspector = FakeInspector()
     metadata_extractor = FakeMetadataExtractor()
-    service = IngestService(registry, inspector, metadata_extractor)
+    document_factory = FakeDocumentFactory()
+    service = IngestService(
+        registry,
+        inspector,
+        metadata_extractor,
+        document_factory,
+    )
 
     command = IngestCommand(
         source="fake-protocol-test.pdf",
@@ -67,6 +87,5 @@ def test_ingest_service_uses_registry_protocol() -> None:
     assert response.document.title == "Ingested from fake-protocol-test.pdf"
     assert response.document.doc_type == DocumentType.STUB
     assert response.document.status == DocumentStatus.ACCEPTED
-    assert registry.calls == [
-        ("fake-protocol-test.pdf", ReplaceStrategy.NEW_VERSIONS_ONLY)
-    ]
+    assert len(registry.calls) == 1
+    assert registry.calls[0].title == "Ingested from fake-protocol-test.pdf"

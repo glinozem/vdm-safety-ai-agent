@@ -1,3 +1,4 @@
+from app.services.document_factory import DocumentFactory
 from app.services.document_registry import registry
 from app.services.ingest_models import IngestCommand, ReplaceStrategy
 from app.services.ingest_service import IngestService
@@ -14,6 +15,7 @@ def test_ingest_service_returns_accepted_response_and_registers_document() -> No
         registry,
         SourceInspector(),
         MetadataExtractor(),
+        DocumentFactory(),
     )
 
     command = IngestCommand(
