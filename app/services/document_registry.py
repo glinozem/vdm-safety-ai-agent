@@ -2,7 +2,7 @@
 
 from uuid import uuid4
 
-from app.schemas.documents import DocumentItem
+from app.schemas.documents import DocumentItem, DocumentStatus, DocumentType
 
 
 class InMemoryDocumentRegistry:
@@ -26,8 +26,8 @@ class InMemoryDocumentRegistry:
             id=str(uuid4()),
             code=f"stub-{len(self._items) + 1:03d}",
             title=f"Ingested from {source}",
-            doc_type="stub",
-            status="accepted",
+            doc_type=DocumentType.STUB,
+            status=DocumentStatus.ACCEPTED,
         )
         self._items.append(document)
         return document

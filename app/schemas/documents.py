@@ -1,12 +1,24 @@
+from enum import StrEnum
+
 from pydantic import BaseModel, Field
+
+
+class DocumentType(StrEnum):
+    STUB = "stub"
+    INSTRUCTION = "instruction"
+
+
+class DocumentStatus(StrEnum):
+    ACCEPTED = "accepted"
+    ACTIVE = "active"
 
 
 class DocumentItem(BaseModel):
     id: str
     code: str
     title: str
-    doc_type: str
-    status: str
+    doc_type: DocumentType
+    status: DocumentStatus
 
 
 class DocumentListResponse(BaseModel):
@@ -20,5 +32,5 @@ class DocumentIngestRequest(BaseModel):
 
 class DocumentIngestResponse(BaseModel):
     job_id: str
-    status: str
+    status: DocumentStatus
     document: DocumentItem

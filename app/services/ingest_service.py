@@ -5,6 +5,7 @@ from uuid import uuid4
 from app.schemas.documents import (
     DocumentIngestRequest,
     DocumentIngestResponse,
+    DocumentStatus,
 )
 from app.services.protocols import DocumentRegistryProtocol
 
@@ -24,6 +25,6 @@ class IngestService:
         )
         return DocumentIngestResponse(
             job_id=str(uuid4()),
-            status="accepted",
+            status=DocumentStatus.ACCEPTED,
             document=document,
         )
