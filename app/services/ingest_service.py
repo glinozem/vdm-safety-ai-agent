@@ -6,7 +6,6 @@ from app.schemas.documents import (
     DocumentIngestRequest,
     DocumentIngestResponse,
 )
-from app.services.document_registry import registry
 from app.services.protocols import DocumentRegistryProtocol
 
 
@@ -28,6 +27,3 @@ class IngestService:
             status="accepted",
             document=document,
         )
-
-
-ingest_service = IngestService(registry)

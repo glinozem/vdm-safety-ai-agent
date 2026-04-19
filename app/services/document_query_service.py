@@ -1,7 +1,6 @@
 """Service layer for document query flows."""
 
 from app.schemas.documents import DocumentListResponse
-from app.services.document_registry import registry
 from app.services.protocols import DocumentRegistryProtocol
 
 
@@ -15,6 +14,3 @@ class DocumentQueryService:
     def list_documents(self) -> DocumentListResponse:
         """Return a typed response with all currently registered documents."""
         return DocumentListResponse(items=self._registry.list_documents())
-
-
-document_query_service = DocumentQueryService(registry)
