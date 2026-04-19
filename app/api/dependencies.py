@@ -3,12 +3,20 @@
 from app.services.container import container
 from app.services.document_query_service import DocumentQueryService
 from app.services.ingest_service import IngestService
-from app.services.protocols import DocumentRegistryProtocol
+from app.services.protocols import (
+    DocumentRegistryProtocol,
+    SourceInspectorProtocol,
+)
 
 
 def get_document_registry() -> DocumentRegistryProtocol:
     """Return the document registry used by application services."""
     return container.registry
+
+
+def get_source_inspector() -> SourceInspectorProtocol:
+    """Return the source inspector used by ingest services."""
+    return container.source_inspector
 
 
 def get_document_query_service() -> DocumentQueryService:
@@ -18,4 +26,4 @@ def get_document_query_service() -> DocumentQueryService:
 
 def get_ingest_service() -> IngestService:
     """Return the ingest service used by API routes."""
-    return IngestService(get_document_registry())
+    return IngestService(get_document_registry(), get_source_inspector())

@@ -12,12 +12,27 @@ class ReplaceStrategy(StrEnum):
     NEW_VERSIONS_ONLY = "new_versions_only"
 
 
+class SourceKind(StrEnum):
+    """Minimal source classification for ingest inputs."""
+
+    LOCAL_FILE = "local_file"
+    UNKNOWN = "unknown"
+
+
 @dataclass(frozen=True)
 class IngestCommand:
     """Command object for document ingest operations."""
 
     source: str
     replace_strategy: ReplaceStrategy = ReplaceStrategy.NEW_VERSIONS_ONLY
+
+
+@dataclass(frozen=True)
+class SourceInspectionResult:
+    """Application-level result of source inspection."""
+
+    source: str
+    source_kind: SourceKind
 
 
 @dataclass(frozen=True)

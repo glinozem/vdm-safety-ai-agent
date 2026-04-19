@@ -1,5 +1,10 @@
 from app.schemas.documents import DocumentItem, DocumentStatus, DocumentType
-from app.services.ingest_models import IngestCommand, ReplaceStrategy
+from app.services.ingest_models import (
+    IngestCommand,
+    ReplaceStrategy,
+    SourceInspectionResult,
+    SourceKind,
+)
 from app.services.ingest_service import IngestService
 
 
@@ -22,9 +27,18 @@ class FakeRegistry:
         )
 
 
+class FakeInspector:
+    def inspect(self, source: str) -> SourceInspectionResult:
+        return SourceInspectionResult(
+            source=source,
+            source_kind=SourceKind.LOCAL_FILE,
+        )
+
+
 def test_ingest_service_uses_registry_protocol() -> None:
     registry = FakeRegistry()
-    service = IngestService(registry)
+    inspector = FakeInspector()
+    service = IngestService(registry, inspector)
 
     command = IngestCommand(
         source="fake-protocol-test.pdf",

@@ -1,6 +1,7 @@
 from app.services.document_registry import registry
 from app.services.ingest_models import IngestCommand, ReplaceStrategy
 from app.services.ingest_service import IngestService
+from app.services.source_inspector import SourceInspector
 
 
 def setup_function() -> None:
@@ -8,7 +9,7 @@ def setup_function() -> None:
 
 
 def test_ingest_service_returns_accepted_response_and_registers_document() -> None:
-    service = IngestService(registry)
+    service = IngestService(registry, SourceInspector())
 
     command = IngestCommand(
         source="service-test.pdf",
