@@ -2,11 +2,8 @@
 
 from uuid import uuid4
 
-from app.schemas.documents import (
-    DocumentIngestRequest,
-    DocumentIngestResponse,
-    DocumentStatus,
-)
+from app.schemas.documents import DocumentStatus
+from app.services.ingest_models import IngestCommand, IngestResult
 from app.services.protocols import DocumentRegistryProtocol
 
 
@@ -17,13 +14,13 @@ class IngestService:
         """Initialize the service with a document registry collaborator."""
         self._registry = registry
 
-    def ingest(self, payload: DocumentIngestRequest) -> DocumentIngestResponse:
-        """Process a stub ingest request and return an accepted response."""
+    def ingest(self, command: IngestCommand) -> IngestResult:
+        """Process a stub ingest command and return an accepted result."""
         document = self._registry.add_stub_document(
-            source=payload.source,
-            replace_strategy=payload.replace_strategy,
+            source=command.source,
+            replace_strategy=command.replace_strategy,
         )
-        return DocumentIngestResponse(
+        return IngestResult(
             job_id=str(uuid4()),
             status=DocumentStatus.ACCEPTED,
             document=document,

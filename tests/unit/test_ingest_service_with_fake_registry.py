@@ -1,9 +1,5 @@
-from app.schemas.documents import (
-    DocumentIngestRequest,
-    DocumentItem,
-    DocumentStatus,
-    DocumentType,
-)
+from app.schemas.documents import DocumentItem, DocumentStatus, DocumentType
+from app.services.ingest_models import IngestCommand
 from app.services.ingest_service import IngestService
 
 
@@ -26,12 +22,12 @@ def test_ingest_service_uses_registry_protocol() -> None:
     registry = FakeRegistry()
     service = IngestService(registry)
 
-    payload = DocumentIngestRequest(
+    command = IngestCommand(
         source="fake-protocol-test.pdf",
         replace_strategy="new_versions_only",
     )
 
-    response = service.ingest(payload)
+    response = service.ingest(command)
 
     assert response.status == DocumentStatus.ACCEPTED
     assert response.job_id

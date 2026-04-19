@@ -1,5 +1,5 @@
-from app.schemas.documents import DocumentIngestRequest
 from app.services.document_registry import registry
+from app.services.ingest_models import IngestCommand
 from app.services.ingest_service import IngestService
 
 
@@ -10,18 +10,18 @@ def setup_function() -> None:
 def test_ingest_service_returns_accepted_response_and_registers_document() -> None:
     service = IngestService(registry)
 
-    payload = DocumentIngestRequest(
+    command = IngestCommand(
         source="service-test.pdf",
         replace_strategy="new_versions_only",
     )
 
-    response = service.ingest(payload)
+    response = service.ingest(command)
 
-    assert response.status == "accepted"
+    assert response.status.value == "accepted"
     assert response.job_id
     assert response.document.title == "Ingested from service-test.pdf"
-    assert response.document.doc_type == "stub"
-    assert response.document.status == "accepted"
+    assert response.document.doc_type.value == "stub"
+    assert response.document.status.value == "accepted"
 
     documents = registry.list_documents()
     assert len(documents) == 1
