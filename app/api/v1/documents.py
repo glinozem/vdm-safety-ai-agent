@@ -5,7 +5,7 @@ from app.schemas.documents import (
     DocumentIngestResponse,
     DocumentListResponse,
 )
-from app.services.document_registry import registry
+from app.services.document_query_service import document_query_service
 from app.services.ingest_service import ingest_service
 
 router = APIRouter()
@@ -13,7 +13,7 @@ router = APIRouter()
 
 @router.get("/documents", response_model=DocumentListResponse)
 def list_documents() -> DocumentListResponse:
-    return DocumentListResponse(items=registry.list_documents())
+    return document_query_service.list_documents()
 
 
 @router.post(
