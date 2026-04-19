@@ -1,5 +1,5 @@
 from app.services.document_registry import registry
-from app.services.ingest_models import IngestCommand
+from app.services.ingest_models import IngestCommand, ReplaceStrategy
 from app.services.ingest_service import IngestService
 
 
@@ -12,7 +12,7 @@ def test_ingest_service_returns_accepted_response_and_registers_document() -> No
 
     command = IngestCommand(
         source="service-test.pdf",
-        replace_strategy="new_versions_only",
+        replace_strategy=ReplaceStrategy.NEW_VERSIONS_ONLY,
     )
 
     response = service.ingest(command)

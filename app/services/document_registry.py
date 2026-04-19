@@ -3,6 +3,7 @@
 from uuid import uuid4
 
 from app.schemas.documents import DocumentItem, DocumentStatus, DocumentType
+from app.services.ingest_models import ReplaceStrategy
 
 
 class InMemoryDocumentRegistry:
@@ -20,7 +21,11 @@ class InMemoryDocumentRegistry:
         """Clear registry state to keep tests isolated."""
         self._items.clear()
 
-    def add_stub_document(self, source: str, replace_strategy: str) -> DocumentItem:
+    def add_stub_document(
+        self,
+        source: str,
+        replace_strategy: ReplaceStrategy,
+    ) -> DocumentItem:
         """Register a stub document for the current ingest prototype."""
         document = DocumentItem(
             id=str(uuid4()),

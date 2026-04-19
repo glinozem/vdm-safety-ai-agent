@@ -12,7 +12,7 @@ from app.schemas.documents import (
     DocumentListResponse,
 )
 from app.services.document_query_service import DocumentQueryService
-from app.services.ingest_models import IngestCommand
+from app.services.ingest_models import IngestCommand, ReplaceStrategy
 from app.services.ingest_service import IngestService
 
 router = APIRouter()
@@ -36,7 +36,7 @@ def ingest_document(
 ) -> DocumentIngestResponse:
     command = IngestCommand(
         source=payload.source,
-        replace_strategy=payload.replace_strategy,
+        replace_strategy=ReplaceStrategy(payload.replace_strategy),
     )
     result = service.ingest(command)
     return DocumentIngestResponse(

@@ -1,13 +1,17 @@
 from app.schemas.documents import DocumentItem, DocumentStatus, DocumentType
-from app.services.ingest_models import IngestCommand
+from app.services.ingest_models import IngestCommand, ReplaceStrategy
 from app.services.ingest_service import IngestService
 
 
 class FakeRegistry:
     def __init__(self) -> None:
-        self.calls: list[tuple[str, str]] = []
+        self.calls: list[tuple[str, ReplaceStrategy]] = []
 
-    def add_stub_document(self, source: str, replace_strategy: str) -> DocumentItem:
+    def add_stub_document(
+        self,
+        source: str,
+        replace_strategy: ReplaceStrategy,
+    ) -> DocumentItem:
         self.calls.append((source, replace_strategy))
         return DocumentItem(
             id="fake-id-1",
@@ -24,7 +28,7 @@ def test_ingest_service_uses_registry_protocol() -> None:
 
     command = IngestCommand(
         source="fake-protocol-test.pdf",
-        replace_strategy="new_versions_only",
+        replace_strategy=ReplaceStrategy.NEW_VERSIONS_ONLY,
     )
 
     response = service.ingest(command)
@@ -35,4 +39,6 @@ def test_ingest_service_uses_registry_protocol() -> None:
     assert response.document.title == "Ingested from fake-protocol-test.pdf"
     assert response.document.doc_type == DocumentType.STUB
     assert response.document.status == DocumentStatus.ACCEPTED
-    assert registry.calls == [("fake-protocol-test.pdf", "new_versions_only")]
+    assert registry.calls == [
+        ("fake-protocol-test.pdf", ReplaceStrategy.NEW_VERSIONS_ONLY)
+    ]

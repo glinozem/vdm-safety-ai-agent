@@ -3,6 +3,7 @@
 from typing import Protocol
 
 from app.schemas.documents import DocumentItem
+from app.services.ingest_models import ReplaceStrategy
 
 
 class DocumentRegistryProtocol(Protocol):
@@ -11,5 +12,9 @@ class DocumentRegistryProtocol(Protocol):
     def list_documents(self) -> list[DocumentItem]:
         """Return currently registered documents."""
 
-    def add_stub_document(self, source: str, replace_strategy: str) -> DocumentItem:
+    def add_stub_document(
+        self,
+        source: str,
+        replace_strategy: ReplaceStrategy,
+    ) -> DocumentItem:
         """Register a stub document and return the created item."""
