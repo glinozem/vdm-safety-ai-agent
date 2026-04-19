@@ -1,13 +1,14 @@
 from fastapi import FastAPI
 
-app = FastAPI(title="vdm-safety-ai-agent", version="0.1.0")
+from app.api.router import api_router
+from app.config import settings
+
+app = FastAPI(title=settings.app_name, version=settings.app_version)
 
 
 @app.get("/")
 def root() -> dict[str, str]:
-    return {"service": "vdm-safety-ai-agent", "status": "ok"}
+    return {"service": settings.app_name, "status": "ok"}
 
 
-@app.get("/health")
-def health() -> dict[str, str]:
-    return {"status": "ok"}
+app.include_router(api_router, prefix="/api/v1")
