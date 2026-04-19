@@ -7,14 +7,19 @@ from app.schemas.documents import (
     DocumentIngestResponse,
 )
 from app.services.document_registry import registry
+from app.services.protocols import DocumentRegistryProtocol
 
 
 class IngestService:
     """Coordinate ingest operations and response construction."""
 
+    def __init__(self, registry: DocumentRegistryProtocol) -> None:
+        """Initialize the service with a document registry collaborator."""
+        self._registry = registry
+
     def ingest(self, payload: DocumentIngestRequest) -> DocumentIngestResponse:
         """Process a stub ingest request and return an accepted response."""
-        document = registry.add_stub_document(
+        document = self._registry.add_stub_document(
             source=payload.source,
             replace_strategy=payload.replace_strategy,
         )
@@ -25,4 +30,4 @@ class IngestService:
         )
 
 
-ingest_service = IngestService()
+ingest_service = IngestService(registry)
