@@ -1,0 +1,31 @@
+name: Story
+description: Product or engineering story for the roadmap
+title: "[Story] "
+labels: ["type:story"]
+body:
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: What problem are we solving?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What is included in this story?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Define explicit completion criteria.
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks / Notes
+      description: Optional implementation notes or dependencies.
