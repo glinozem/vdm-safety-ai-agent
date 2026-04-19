@@ -10,6 +10,9 @@ class InMemoryDocumentRegistry:
     def list_documents(self) -> list[DocumentItem]:
         return list(self._items)
 
+    def reset(self) -> None:
+        self._items.clear()
+
     def add_stub_document(self, source: str, replace_strategy: str) -> DocumentItem:
         document = DocumentItem(
             id=str(uuid4()),

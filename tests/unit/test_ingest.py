@@ -7,7 +7,7 @@ client = TestClient(app)
 
 
 def setup_function() -> None:
-    registry._items.clear()
+    registry.reset()
 
 
 def test_ingest_endpoint_accepts_stub_document() -> None:
